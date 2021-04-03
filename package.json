@@ -1,7 +1,7 @@
 {
   "name": "cricketcode",
   "displayName": "cricketCode",
-  "description": "",
+  "description": "view matches,scorecard and commentary throught command line",
   "version": "0.0.1",
   "engines": {
     "vscode": "^1.55.0"
