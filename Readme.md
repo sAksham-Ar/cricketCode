@@ -1,3 +1,3 @@
 # cricketCode
 
-View crickets scores,commentary and scorecard in vscode.
+View cricket scores,commentary and scorecard in vscode.
