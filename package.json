@@ -1,0 +1,77 @@
+{
+  "name": "cricketcode",
+  "displayName": "cricketCode",
+  "description": "",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.55.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "*",
+    "onCommand:cricketCode.getmatches",
+    "onCommand:cricketCode.getcommentary"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "cricket-code",
+          "title": "Cricket Code",
+          "icon": "media/bat.svg"
+        }
+      ]
+    },
+    "views":{
+      "cricket-code":[
+        {
+          "id": "cricketCode",
+          "name": "Cricket Code"
+        }
+      ]
+    },
+    "viewsWelcome": [
+      {
+        "view": "cricketCode",
+        "contents": "[Get Matches](command:cricketCode.getmatches)\n[Get Commentary](command:cricketCode.getcommentary)"
+      }
+    ],
+    "commands": [
+      {
+        "command": "cricketCode.getmatches",
+        "title": "get matches"
+      },
+      {
+        "command": "cricketCode.getcommentary",
+        "title": "get commentary"
+      }
+    ]
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "pretest": "npm run compile && npm run lint",
+    "lint": "eslint src --ext ts",
+    "test": "node ./out/test/runTest.js"
+  },
+  "devDependencies": {
+    "@types/glob": "^7.1.3",
+    "@types/mocha": "^8.0.4",
+    "@types/node": "^12.11.7",
+    "@types/vscode": "^1.55.0",
+    "@typescript-eslint/eslint-plugin": "^4.14.1",
+    "@typescript-eslint/parser": "^4.14.1",
+    "eslint": "^7.19.0",
+    "glob": "^7.1.6",
+    "mocha": "^8.2.1",
+    "typescript": "^4.1.3",
+    "vscode-test": "^1.5.0"
+  },
+  "dependencies": {
+    "axios": "^0.21.1"
+  }
+}
