@@ -2,9 +2,11 @@ import * as vscode from 'vscode';
 import { resolveCliPathFromVSCodeExecutablePath } from 'vscode-test';
 import Axios, { AxiosResponse } from "axios";
 import { Script } from 'node:vm';
-
+import { AsyncLocalStorage } from 'node:async_hooks';
+import {Memento} from 'vscode';
 export function activate(context: vscode.ExtensionContext) {
   vscode.window.registerTreeDataProvider('cricketCode',new TreeDataProvider);
+ 
   context.subscriptions.push(
     
     vscode.commands.registerCommand('cricketCode.getmatches', async () => {
@@ -35,6 +37,7 @@ export function activate(context: vscode.ExtensionContext) {
     
     })
     ,vscode.commands.registerCommand('cricketCode.getcommentary', async (id:string) => {
+    ;
       // Create and show a new webview
       const panel = vscode.window.createWebviewPanel(
         'cricketCode', // Identifies the type of the webview. Used internally
@@ -49,7 +52,7 @@ export function activate(context: vscode.ExtensionContext) {
 
     updateCommentaryWebview();
 
-    const interval=setInterval(updateCommentaryWebview,3000);
+    const interval=setInterval(updateCommentaryWebview,6000);
 
     panel.onDidDispose(
       () => {
@@ -102,6 +105,7 @@ function makeRow(team:any):string{
 
 function makeTable(matches:any[]) :string
 {
+  
   var table: string;
   table="<table>";
   matches.map((match)=>{
@@ -142,31 +146,89 @@ async function getMatchesWebviewContent() {
   </html>`;
   
 	return HTML;
+}
+
+
+async function getCommentaryWebviewContent (id:string) {
+  id="35212"
+  var commentary;
+  var ctable:string;
+  commentary=getcommentary(id)
+  
+ 
+  ctable=makeComTable(await commentary);
+       
+ 
+  var HTML=`<!DOCTYPE html>
+  <html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cricket Code</title>
+  </head>
+  <body>
+
+  `+ctable+`
+  </body>
+  </html>`;
+    
+  return HTML;
+    }
+    async function getcommentary(id:string) :Promise<any>
+    {
+     
+    const URL="https://cric-api.herokuapp.com/commentary/"+id;
+    
+      return   Axios.get(URL)
+      .then(
+          (response: AxiosResponse<any>)=>{
+           
+            return  response.data;
+           
+          
+          }
+      )
+      .catch((err)=>console.log(err));
+    
   }
 
-  async function getCommentaryWebviewContent(id:string) {
+    function makeComRow(comm:any):string{
 
-    var matches;
-    var table:string;
-   console.log(id);
-    matches=getMatches();
-  
-    table=makeTable(await matches);
-  
-    var HTML=`<!DOCTYPE html>
-    <html lang="en">
-    <head>
-      <meta charset="UTF-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>Cricket Code</title>
-    </head>
-    <body>
+      var crow='<tr>'+'<td>'+comm.comm+': ';
+      comm.comm.map((sc: any,idx:number)=>{
+        if(idx!==0)
+        {
+          crow+=' & ';
+        }
+        if(sc.comm!==undefined)
+        {
+          var covers=sc.over!==undefined?'('+sc.overs+')':'';
+          crow+=covers;      
+        }
+      });
+      crow+='</td>'+'</tr>';
     
-    `+table+`
-    </body>
-    </html>`;
+      return crow;
     
-    return HTML;
+    }
+    
+    function makeComTable(commentary:any[]) :string
+    { 
+      
+     
+      var ctable: string;
+      ctable="<table>";
+      console.log("kkkkkkkkkkkkkkk")
+      var newcom=[];
+
+      newcom=commentary.comm;
+      console.log(newcom)
+      newcom.map((com: any[])=>{
+        var crow=`<tr><td>${com.comm}</td></tr>`
+        ctable+=crow
+      });
+    console.log(ctable)
+    return ctable
     }
 
     class TreeDataProvider implements vscode.TreeDataProvider<TreeItem> {

@@ -12,7 +12,8 @@
   "activationEvents": [
     "*",
     "onCommand:cricketCode.getmatches",
-    "onCommand:cricketCode.getcommentary"
+    "onCommand:cricketCode.getcommentary",
+    "onCommand:cricketCode.console"
   ],
   "main": "./out/extension.js",
   "contributes": {
@@ -25,8 +26,8 @@
         }
       ]
     },
-    "views":{
-      "cricket-code":[
+    "views": {
+      "cricket-code": [
         {
           "id": "cricketCode",
           "name": "Cricket Code"
@@ -36,7 +37,7 @@
     "viewsWelcome": [
       {
         "view": "cricketCode",
-        "contents": "[Get Matches](command:cricketCode.getmatches)\n[Get Commentary](command:cricketCode.getcommentary)"
+        "contents": "[Get Matches](command:cricketCode.getmatches)\n[Get Commentary](command:cricketCode.getcommentary)\n[Get Console](command:cricketCode.console)"
       }
     ],
     "commands": [
@@ -47,6 +48,10 @@
       {
         "command": "cricketCode.getcommentary",
         "title": "get commentary"
+      },
+      {
+        "command": "cricketCode.console",
+        "title": "console"
       }
     ]
   },
