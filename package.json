@@ -13,6 +13,7 @@
     "*",
     "onCommand:cricketCode.getmatches",
     "onCommand:cricketCode.getcommentary"
+
   ],
   "main": "./out/extension.js",
   "contributes": {
@@ -25,8 +26,8 @@
         }
       ]
     },
-    "views":{
-      "cricket-code":[
+    "views": {
+      "cricket-code": [
         {
           "id": "cricketCode",
           "name": "Cricket Code"
@@ -48,6 +49,7 @@
         "command": "cricketCode.getcommentary",
         "title": "get commentary"
       }
+
     ]
   },
   "scripts": {
