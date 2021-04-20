@@ -3,6 +3,8 @@
   "displayName": "cricketCode",
   "description": "view matches,scorecard and commentary throught command line",
   "version": "0.0.1",
+  "publisher":"SakshamTanmya",
+  "repository":"https://github.com/sAksham-Ar/cricketCode",
   "engines": {
     "vscode": "^1.55.0"
   },
@@ -72,10 +74,10 @@
     "mocha": "^8.2.1",
     "npm": "^7.10.0",
     "typescript": "^4.2.4",
-    "vscode-test": "^1.5.0"
+    "vscode-test": "^1.5.0",
+    "vscode": "^0.9.9"
   },
   "dependencies": {
-    "axios": "^0.21.1",
-    "vscode": "^0.9.9"
+    "axios": "^0.21.1"
   }
 }
