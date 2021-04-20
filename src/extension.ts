@@ -25,7 +25,7 @@ export function activate(context: vscode.ExtensionContext) {
         panel.webview.html = await getMatchesWebviewContent();
         };
     
-        updateMatchesWebview();
+        panel.webview.html =fetching();
 
         const interval=setInterval(updateMatchesWebview,3000);
 
@@ -55,7 +55,37 @@ export function activate(context: vscode.ExtensionContext) {
 
     updateCommentaryWebview();
 
-    const interval=setInterval(updateCommentaryWebview,18000);
+    const interval=setInterval(updateCommentaryWebview,10000);
+
+    panel.webview.onDidReceiveMessage(
+      async message => {
+        const newPanel = vscode.window.createWebviewPanel(
+          'cricketCode', // Identifies the type of the webview. Used internally
+          'Cricket Code', // Title of the panel displayed to the user
+          vscode.ViewColumn.One, // Editor column to show the new webview panel in.
+          {
+        enableScripts: true}
+        );
+        var id=message.command;
+        newPanel.webview.html=await getMatchCommentaryWebview(message.command);
+        const updateMatchCommentaryWebview=async ()=>{
+          newPanel.webview.html = await getMatchCommentaryWebview(id);
+          };
+        updateMatchCommentaryWebview();
+        const interval=setInterval(updateMatchCommentaryWebview,3000);
+        newPanel.onDidDispose(
+          () => {
+            // When the panel is closed, cancel any future updates to the webview content
+            clearInterval(interval);
+          },
+          null,
+          context.subscriptions
+        );
+      
+      },
+      undefined,
+      context.subscriptions
+    );
 
     panel.onDidDispose(
       () => {
@@ -119,7 +149,7 @@ function makeTable(matches:any[]) :string
   var commentary;
   var ctable:string;
 
-  matches.map((git:any[])=>{
+  matches.map((git:any)=>{
     batar.push(git.batting.team)
     idar.push(git.id)
     bowlar.push(git.bowling.team)
@@ -158,7 +188,6 @@ async function getMatchesWebviewContent() {
   var HTML=`<!DOCTYPE html>
   <html lang="en">
   <head>
-  <meta http-equiv="Content-Security-Policy">
 	  <meta charset="UTF-8">
 	  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 	  <title>Cricket Code</title>
@@ -178,6 +207,31 @@ async function getMatchesWebviewContent() {
   </html>`;
   
 	return HTML;
+}
+
+function fetching()
+{
+  return `<!DOCTYPE html>
+  <html lang="en">
+  <head>
+  <meta http-equiv="Content-Security-Policy">
+	  <meta charset="UTF-8">
+	  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	  <title>Cricket Code</title>
+  </head>
+  <body>
+  <div id="table">
+  fetching....
+  </div>
+  <script>
+    function showCom(){
+      var btn=document.getElementById("btn");
+      btn.innerHTML="Click on Get Commentary";
+    }
+  </script>
+  </body>
+  
+  </html>`;
 }
 
 function getIndex(matches:any[]) {
@@ -221,39 +275,27 @@ async function getCommentaryWebviewContent () {
   
   
    for(let i=0;i<idar.length;i++){
-    buttons+=`<button class=`+batar[i]+'/'+bowlar[i]+` id="btn${i}" onclick="whichCom(${i})">`+batar[i]+'/'+bowlar[i]+`</button>`
-    commentary=getcommentary(idar[i])
-    ctable=makeComTable(await commentary,i.toString()); 
-    ctable+='</table>'
-    bigdiv+=ctable
+    buttons+=`<button class=`+batar[i]+'/'+bowlar[i]+` id="`+idar[i]+`" onclick="whichCom(`+idar[i]+`)">`+batar[i]+'/'+bowlar[i]+`</button>`
   }
-  bigdiv+="</div>"
   var HTML=`<!DOCTYPE html>
   <html lang="en">
   <head>
+  <meta http-equiv="Content-Security-Policy">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cricket Code</title>
   </head>
   <body>
   `+buttons+`
-  `+bigdiv+`
 
   <script>
 
   function whichCom(id){
-    var btn=document.getElementById('btn'+id);
-    
-    if(btn.innerText=="Hide Commentary"){
-      
-      document.getElementById(id).style.display="none";
-      btn.innerText=btn.className;
-    }else{
- 
-    btn.innerText="Showing Commentary";
-    document.getElementById(id).style.display="block";
-    btn.innerText="Hide Commentary";
-    }
+    const vscode = acquireVsCodeApi();
+    vscode.postMessage({
+      command: id,
+      text: 'get commentary'
+    })
   }
   </script>
   </body>
@@ -278,38 +320,51 @@ async function getCommentaryWebviewContent () {
     
   }
 
-    // function makeComRow(comm:any):string{
-
-    //   var crow='<tr>'+'<td>'+comm.comm+': ';
-    //   comm.comm.map((sc: any,idx:number)=>{
-    //     if(idx!==0)
-    //     {
-    //       crow+=' & ';
-    //     }
-    //     if(sc.comm!==undefined)
-    //     {
-    //       var covers=sc.over!==undefined?'('+sc.overs+')':'';
-    //       crow+=covers;      
-    //     }
-    //   });
-    //   crow+='</td>'+'</tr>';
+  async function getMatchCommentaryWebview(id:string) {
+    var commentary=await getcommentary(id);
+    var table=makeComTable(commentary);
+    table+="</table>";
+  return `<!DOCTYPE html>
+  <html lang="en">
+  <head>
+  <meta http-equiv="Content-Security-Policy">
+	  <meta charset="UTF-8">
+	  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	  <title>Cricket Code</title>
+  </head>
+  <body>
+  <div id="table">
+  `+table+`
+  </div>
+  <script>
+    function showCom(){
+      var btn=document.getElementById("btn");
+      btn.innerHTML="Click on Get Commentary";
+    }
+  </script>
+  </body>
+  
+  </html>`;
     
-    //   return crow;
+  }
     
-    // }
-    
-    function makeComTable(commentary:any[],id:string) :string
+    function makeComTable(commentary:any) :string
     { 
       
      
       var ctable: string;
-      ctable="<table style=\"display:none;\"id="+id+">";
+      ctable="<table>";
      
       var newcom=[];
 
       newcom=commentary.comm;
-      newcom.map((com: any[])=>{
-        var crow=`<tr><td>${com.comm}</td></tr>`
+      newcom.map((com: any)=>{
+        var crow=`<tr><td>`
+        if(com.over!=null)
+        {
+          crow+=com.over+`:` ;
+        }
+        crow+=com.comm+`</td></tr>`
         ctable+=crow
       });
   
