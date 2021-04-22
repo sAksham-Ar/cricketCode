@@ -7,6 +7,7 @@ import {Memento} from 'vscode';
 import { insidersDownloadDirToExecutablePath } from 'vscode-test/out/util';
 import { constants } from 'node:buffer';
 import { parse } from 'node:path';
+import { window } from 'vscode';
 export function activate(context: vscode.ExtensionContext) {
   vscode.window.registerTreeDataProvider('cricketCode',new TreeDataProvider);
  

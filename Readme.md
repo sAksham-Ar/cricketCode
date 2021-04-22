@@ -2,6 +2,10 @@
 
 View cricket scores,commentary and scorecard in vscode.
 
-![matches](/media/matches.jpeg)
+Screenshots:
 
-![commentary](/media/commentary.jpeg)
+[matches](https://github.com/sAksham-Ar/cricketCode/blob/main/media/commentary.jpg)
+
+[commentary](https://github.com/sAksham-Ar/cricketCode/blob/main/media/matches.jpg)
+
+Many more updates coming soon!
