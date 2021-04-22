@@ -3,8 +3,8 @@
   "displayName": "cricketCode",
   "description": "view matches,scorecard and commentary throught command line",
   "version": "0.0.1",
-  "publisher":"SakshamTanmya",
-  "repository":"https://github.com/sAksham-Ar/cricketCode",
+  "publisher": "SakshamTanmya",
+  "repository": "https://github.com/sAksham-Ar/cricketCode",
   "engines": {
     "vscode": "^1.55.0"
   },
@@ -14,7 +14,8 @@
   "activationEvents": [
     "*",
     "onCommand:cricketCode.getmatches",
-    "onCommand:cricketCode.getcommentary"
+    "onCommand:cricketCode.getcommentary",
+    "onCommand:cricketCode.viewScorecard"
   ],
   "main": "./out/extension.js",
   "contributes": {
@@ -38,7 +39,7 @@
     "viewsWelcome": [
       {
         "view": "cricketCode",
-        "contents": "[Get Matches](command:cricketCode.getmatches)\n[Get Commentary](command:cricketCode.getcommentary)"
+        "contents": "[Get Matches](command:cricketCode.getmatches)\n[Get Commentary](command:cricketCode.getcommentary)\n[View Scorecard](command:cricketCode.viewScorecard)"
       }
     ],
     "commands": [
@@ -49,6 +50,10 @@
       {
         "command": "cricketCode.getcommentary",
         "title": "get commentary"
+      },
+      {
+        "command": "cricketCode.viewScorecard",
+        "title": "view scorecard"
       }
     ]
   },
