@@ -1,15 +1,6 @@
 import * as vscode from "vscode";
 import { resolveCliPathFromVSCodeExecutablePath } from "vscode-test";
 import Axios, { AxiosResponse } from "axios";
-<<<<<<< HEAD
-import { Script } from 'node:vm';
-import { AsyncLocalStorage } from 'node:async_hooks';
-import {Memento} from 'vscode';
-import { insidersDownloadDirToExecutablePath } from 'vscode-test/out/util';
-import { constants } from 'node:buffer';
-import { parse } from 'node:path';
-import { window } from 'vscode';
-=======
 import { Script } from "node:vm";
 import { AsyncLocalStorage } from "node:async_hooks";
 import { Memento } from "vscode";
@@ -18,7 +9,6 @@ import { constants } from "node:buffer";
 import { parse } from "node:path";
 import { commands } from "vscode";
 import { error } from "node:console";
->>>>>>> 6844301405ad45214ff34a2753404f3b93cfda61
 export function activate(context: vscode.ExtensionContext) {
   vscode.window.registerTreeDataProvider("cricketCode", new TreeDataProvider());
   context.subscriptions.push(

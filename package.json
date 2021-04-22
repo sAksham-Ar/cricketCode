@@ -1,17 +1,10 @@
 {
   "name": "cricketcode",
   "displayName": "cricketCode",
-<<<<<<< HEAD
   "description": "view matches and commentary through vscode",
   "version": "0.0.3",
   "publisher":"SakshamTanmya",
   "repository":"https://github.com/sAksham-Ar/cricketCode",
-=======
-  "description": "view matches,scorecard and commentary throught command line",
-  "version": "0.0.1",
-  "publisher": "SakshamTanmya",
-  "repository": "https://github.com/sAksham-Ar/cricketCode",
->>>>>>> 6844301405ad45214ff34a2753404f3b93cfda61
   "engines": {
     "vscode": "^1.55.0"
   },
