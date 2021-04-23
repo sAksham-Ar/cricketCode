@@ -598,9 +598,9 @@ function makeScoreTable(scorecard: any, inn: any): string {
     ballscore = scorecard[inn].bowlcard;
     fallscore = scorecard[inn].fall_wickets;
     sctable += `<u><b>Batting Card</b></u>`;
-    var brow = `<tr><td>Name</td><td>Overs</td><td>Maidens</td><td>Runs</td><td>Wickets</td></tr>`;
-    var srow = `<tr><td>Name</td><td>Runs</td><td>Balls</td><td>Fours</td><td>Sixes</td><td>Strike Rate</td><td>Dismissal</td></tr>`;
-    var frow = `<tr><td>Wicket Number</td><td>Score</td><td>Overs</td><td>Name</td></tr>`;
+    var brow = `<tr><td><b><u>Name</b></u></td><td><b><u>Overs</b></u></td><td><b><u>Maidens</b></u></td><td><b><u>Runs</b></u></td><td><b><u>Wickets</b></u></td></tr>`;
+    var srow = `<tr><td><b><u>Name</b></u></td><td><b><u>Runs</b></u></td><td><b><u>Balls</b></u></td><td><b><u>Fours</b></u></td><td><b><u>Sixes</b></u></td><td><b><u>Strike Rate</b></u></td><td><b><u>Dismissal</b></u></td></tr>`;
+    var frow = `<tr><td><b><u>Wicket Number</b></u></td><td><b><u>Score</b></u></td><td><b><u>Overs</b></u></td><td><b><u>Name</b></u></td></tr>`;
     sctable += srow;
     newscore.map((sc: any) => {
       var srow = `<tr>`;
