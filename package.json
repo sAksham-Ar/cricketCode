@@ -1,9 +1,9 @@
 {
   "name": "cricketcode",
   "displayName": "cricketCode",
-  "icon": "media/logo.jpeg",
+  "icon": "https://raw.githubusercontent.com/sAksham-Ar/cricketCode/main/media/logo.jpeg",
   "description": "view matches and commentary through vscode",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "publisher":"SakshamTanmya",
   "repository":"https://github.com/sAksham-Ar/cricketCode",
   "engines": {
