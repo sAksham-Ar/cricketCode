@@ -1,14 +1,10 @@
 import * as vscode from "vscode";
-import { resolveCliPathFromVSCodeExecutablePath } from "vscode-test";
 import Axios, { AxiosResponse } from "axios";
-import { Script } from "node:vm";
-import { AsyncLocalStorage } from "node:async_hooks";
-import { Memento } from "vscode";
-import { insidersDownloadDirToExecutablePath } from "vscode-test/out/util";
-import { constants } from "node:buffer";
-import { parse } from "node:path";
-import { commands } from "vscode";
-import { error } from "node:console";
+import { window } from "vscode";
+import { strict } from "node:assert";
+
+var notifications:string[]=[];
+
 export function activate(context: vscode.ExtensionContext) {
   vscode.window.registerTreeDataProvider("cricketCode", new TreeDataProvider());
   context.subscriptions.push(
@@ -219,9 +215,6 @@ function makeTable(matches: any[]): string {
   var batar: any[] = [];
   var idar: any[] = [];
   var bowlar: any[] = [];
-  var comar: any[] = [];
-  var commentary;
-  var ctable: string;
 
   matches.map((git: any) => {
     batar.push(git.batting.team);
@@ -236,14 +229,8 @@ function makeTable(matches: any[]): string {
     var bowlerRow = makeRow(match.bowling);
     table += bowlerRow;
 
-    // commentary=getcommentary(idar[index])
-    // ctable=makeComTable(await commentary);
-
-    // comar.push(ctable);
-    // table+=ctable;
     table += "<tr><td>" + match.status + "</td></tr>";
     table += `<tr><td></td><tr>`;
-    // <button id="btn" onclick="showCom()"></button>
   });
   table += "</table>";
 
@@ -253,7 +240,6 @@ function makeTable(matches: any[]): string {
 async function getMatchesWebviewContent() {
   var matches;
   var table: string;
-  var team_id: string;
   matches = getMatches();
 
   table = makeTable(await matches);
@@ -335,12 +321,10 @@ function getBowl(matches: any[]) {
 async function getCommentaryWebviewContent() {
   var matches;
   var idar: any[] = [];
-  // var allComs=[]
-  var commentary;
-  var bigdiv = "<div>";
+
   var batar;
   var bowlar;
-  var ctable: string | undefined = undefined;
+
   var buttons: string | "" = "";
   matches = getMatches();
   batar = getBat(await matches);
@@ -442,8 +426,19 @@ function makeComTable(commentary: any): string {
 
   newcom.map((com: any) => {
     var crow = `<tr><td>`;
-    if (com.over != null) {
-      crow += com.over + `:`;
+    if (com.over !== null) {
+      crow += com.over + `: `;
+    }
+    var commentaryLine:string=com.comm;
+    if(commentaryLine.search("SIX")!==-1||commentaryLine.search("THATS OUT")!==-1)
+    {
+      commentaryLine=commentaryLine.replace('<b>','');
+      commentaryLine=commentaryLine.replace('</b>','');
+      if(notifications.indexOf(commentaryLine)===-1)
+      {
+        notifications.push(commentaryLine);
+        window.showInformationMessage(commentaryLine);
+      }
     }
     crow += com.comm + `</td></tr>`;
     ctable += crow;
@@ -455,9 +450,6 @@ function makeComTable(commentary: any): string {
 async function getScorecardWebviewContent() {
   var matches;
   var idar: any[] = [];
-  // var allComs=[]
-  var commentary;
-  var bigdiv = "<div>";
   var batar;
   var bowlar;
 
@@ -512,7 +504,6 @@ async function getScorecardWebviewContent() {
   return HTML;
 }
 async function getInningsWebviewContent() {
-  var matches;
   var idar: any[] = [];
   var buttons: string | "" = "";
 
@@ -606,10 +597,10 @@ function makeScoreTable(scorecard: any, inn: any): string {
     newscore = scorecard[inn].batcard;
     ballscore = scorecard[inn].bowlcard;
     fallscore = scorecard[inn].fall_wickets;
-    sctable += `<u><b>BatCard</b></u>`;
+    sctable += `<u><b>Batting Card</b></u>`;
     var brow = `<tr><td>Name</td><td>Overs</td><td>Maidens</td><td>Runs</td><td>Wickets</td></tr>`;
     var srow = `<tr><td>Name</td><td>Runs</td><td>Balls</td><td>Fours</td><td>Sixes</td><td>Strike Rate</td><td>Dismissal</td></tr>`;
-    var frow = `<tr><td>Wicekt Number</td><td>Score</td><td>Overs</td><td>Name</td></tr>`;
+    var frow = `<tr><td>Wicket Number</td><td>Score</td><td>Overs</td><td>Name</td></tr>`;
     sctable += srow;
     newscore.map((sc: any) => {
       var srow = `<tr>`;
@@ -624,7 +615,7 @@ function makeScoreTable(scorecard: any, inn: any): string {
     });
     sctable += `</table>`;
     sctable += `<hr>`;
-    sctable += `<u><b>BallCard</b></u>`;
+    sctable += `<u><b>Bowling Card</b></u>`;
     sctable += "<table>";
     sctable += brow;
     ballscore.map((bc: any) => {
@@ -638,7 +629,7 @@ function makeScoreTable(scorecard: any, inn: any): string {
     });
     sctable += `</table>`;
     sctable += `<hr>`;
-    sctable += `<u><b>Fall Wickets</b></u>`;
+    sctable += `<u><b>Fall of Wickets</b></u>`;
     sctable += "<table>";
     sctable += frow;
     fallscore.map((fc: any) => {
