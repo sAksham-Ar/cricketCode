@@ -1,7 +1,6 @@
 import * as vscode from "vscode";
 import Axios, { AxiosResponse } from "axios";
 import { window } from "vscode";
-import { strict } from "node:assert";
 
 var notifications:string[]=[];
 
@@ -430,13 +429,23 @@ function makeComTable(commentary: any): string {
       crow += com.over + `: `;
     }
     var commentaryLine:string=com.comm;
-    if(commentaryLine.search("SIX")!==-1||commentaryLine.search("THATS OUT")!==-1)
+    if(commentaryLine.search("THATS OUT")!==-1)
     {
       commentaryLine=commentaryLine.replace('<b>','');
       commentaryLine=commentaryLine.replace('</b>','');
       if(notifications.indexOf(commentaryLine)===-1)
       {
         notifications.push(commentaryLine);
+        window.showInformationMessage(commentaryLine);
+      }
+    }
+    if(commentaryLine.search("SIX")!==-1)
+    {
+      commentaryLine=commentaryLine.replace('<b>','');
+      commentaryLine=commentaryLine.replace('</b>','');
+      if(notifications.indexOf(com.over)===-1)
+      {
+        notifications.push(com.over);
         window.showInformationMessage(commentaryLine);
       }
     }
